@@ -16,6 +16,11 @@
   Configure it locally (`git config --local user.email jamietsao@gmail.com`),
   leaving global Git settings unchanged. Verify the effective identity before
   committing; do not use the user's work email.
+- For commits with Codex contributions, append this Git trailer after a blank
+  line in the commit message: `Co-authored-by: Codex <noreply@openai.com>`.
+  This is the repo's attribution convention; keep Jamie Tsao as the primary
+  author and committer. Do not add it to commits without Codex contributions
+  or rewrite previously published commits solely to add attribution.
 - Always use branch-based development. Check the current branch and working tree
   before starting a milestone; create an appropriately named feature/fix/docs
   branch from `main` for new work. Preserve existing uncommitted work when
