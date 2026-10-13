@@ -131,14 +131,13 @@ sign-in, Picker selection, and read-only loading of the Notes-layout test copy
 (218 populated rows, $187.00). The user confirmed the balance and transaction
 history match. The user also confirmed hosted Google sign-in, balance/history,
 and the requested Safari screen-fit, refresh, and return-to-app checks on a
-target device. The second account now signs in on the user's phone but still
-needs its account-to-sheet mapping and ledger/write checks. The user confirmed
-local and hosted Safari Add, Spend, Recount, and
+target device. The user also signed in with the second account on their phone,
+connected its original through Picker, and confirmed the balance/history.
+The user confirmed local and hosted Safari Add, Spend, Recount, and
 adding after a recount on the disposable copy. Direct spreadsheet edits and
 row deletions were also reflected in the app after automatic refresh. Writes
-are enabled in Production, which now targets the first account's original sheet.
-The user connected it through Picker and confirmed its balance/history look
-correct. Local development still targets the disposable copy; Preview stays read-only.
+are enabled in Production, with both accounts mapped to their respective
+originals. Local development still targets the disposable copy; Preview stays read-only.
 
 - [x] **Desktop read-only checkpoint:** one account can sign in, connect its
   disposable copy, and view the correct balance and history; user review passed.
@@ -156,8 +155,10 @@ correct. Local development still targets the disposable copy; Preview stays read
 - [ ] **History details:** check older entries, date ranges, and recount markers.
 - [x] **External edits:** the user confirmed that direct spreadsheet updates
   and row deletions appear in the app after automatic refresh.
-- [ ] **Second account:** Google sign-in succeeded on the user's phone; configure
-  its verified account-to-sheet mapping, then verify ledger access and money actions.
+- [x] **Second-account access:** Google sign-in succeeded on the user's phone;
+  its original is connected through Picker and balance/history passed user review.
+- [ ] **Second-account writes:** money actions under this account have not been
+  explicitly verified live.
 - [x] **Basic local writes:** Add money, Spend money, and Recount cash work
   against the disposable copy, as reported by the user. The user observed the
   working running-balance formula in Sheets.
@@ -176,18 +177,20 @@ correct. Local development still targets the disposable copy; Preview stays read
   and confirmed its displayed balance/history look correct; the app's layout
   check passed. The user approved proceeding after basic local and hosted tests,
   deferring remaining manual edge cases and concurrency checks.
+- [x] **Second-account connection:** the user confirmed its original-sheet
+  setup after updating the complete two-account mapping; first record preserved.
 
 `ENABLE_SHEET_WRITES=false` is the default. Read-only mode is displayed in the
 app and enforced on the server. Original Sheets were not modified during
 development. Setting the flag acknowledges completion of the manual gate.
-Remaining unchecked edge cases are deferred by the user's decision for the
-first-account release; they have not been verified live.
+Remaining unchecked edge cases are deferred by the user's decision to proceed
+with original-sheet setup; they have not been verified live.
 
 Avoid simultaneous recounts, spending confirmations, or structural Sheet edits
 when checking exact confirmation amounts. The read/append concurrency limitation
 is documented in [SPEC.md](SPEC.md#compatibility-and-limitations).
 
-### Current live-write milestone
+### Live-write verification
 
 Add money, Spend money, and Recount cash are approved for testing together on
 the configured disposable copy in one PR. Basic local and hosted Safari flows,
@@ -225,10 +228,17 @@ daughter's app session. Production writes remain enabled for regular use.
 
 Keep the local connection and live test entries on the disposable copy. Do not
 add synthetic test entries to the original. Keep remaining manual edge cases
-recorded as deferred. Second-account Google sign-in now works on the user's
-phone; its verified account ID and original-sheet URL are requested to prepare
-that separate connection. Connection values belong in private environment
-configuration,
+recorded as deferred. Both accounts are now configured in Production, and the
+user confirmed the second account's phone sign-in, Picker connection, and
+balance/history. Second-account money actions remain unverified live.
+
+When adding another account, append its verified account-to-sheet record to
+the complete Production `FAMILY_MEMBERS` array, preserving existing records.
+Its display name can be edited independently of the verified account ID.
+Redeploy and sign in again if the unconfigured-account screen remains, then
+connect the correct original through Picker and verify its balance/history
+before making entries. All ledgers need Date/Amount/Balance/Description (or
+Notes) in A–D. Connection values belong in private environment configuration,
 not this repository's tracked files.
 
 ## Tests
@@ -264,11 +274,12 @@ The test deployment is at
 [piggybank-mauve.vercel.app](https://piggybank-mauve.vercel.app/). Hosted Google
 sign-in and balance/history passed user review on desktop and target-device
 Safari, including screen-fit, refresh, and return-to-app checks. The second
-account's phone sign-in works; its connection and ledger/write checks are pending.
+account's phone sign-in, Picker connection, and balance/history passed user review;
+its money actions remain unverified live.
 After local review, the user confirmed
 hosted Safari Add, Spend, Recount, and adding after a recount on the disposable
-copy. Production now connects the first account's original through Picker, with
-balance/history confirmed by the user and writes enabled for regular use.
+copy. Production now connects both accounts to their respective originals through
+Picker, with balance/history confirmed by the user and writes enabled for regular use.
 Local development stays on the disposable copy; Preview remains read-only.
 
 Import `jamietsao/piggybank` as a Next.js project with root `./` and production
@@ -283,7 +294,7 @@ these environment variables for **Production**:
 | `GOOGLE_CLIENT_SECRET` | Existing Google OAuth client secret |
 | `GOOGLE_PICKER_API_KEY` | Existing Picker key with the hosted referrer added |
 | `GOOGLE_CLOUD_PROJECT_NUMBER` | Existing numeric Google Cloud project number |
-| `FAMILY_MEMBERS` | Verified account-to-sheet mapping; first account now uses its original |
+| `FAMILY_MEMBERS` | Complete two-account mapping to the respective originals |
 | `SESSION_SECRET` | Separate generated deployment secret of at least 32 characters |
 
 For initial read-only setup, set `ENABLE_SHEET_WRITES=false` and
@@ -305,9 +316,9 @@ and `https://docs.google.com/*`. Keep sign-in testing on the stable production
 domain. Preview/deployment URLs may require Vercel authentication in addition
 to the app's Google sign-in.
 
-The first account's basic read/write checkpoint is reviewed locally and on
-Vercel. The user approved first-account original-sheet setup with the remaining
-manual edge cases deferred; follow the original-sheet setup/readback steps above.
+The basic read/write checkpoint is reviewed locally and on Vercel using the
+first account's disposable copy. Both original connections passed user review,
+with remaining manual edge cases deferred.
 
 The authentication model and future onboarding extension are documented in
 [SPEC.md](SPEC.md#architecture-and-account-connections).
