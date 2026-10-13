@@ -40,16 +40,25 @@
   Notes-layout copy in desktop Chrome; the user confirmed balance and history.
   The user also confirmed hosted Google sign-in, balance/history, and the
   requested Safari screen-fit, refresh, and return-to-app checks on a target
-  device. The read-only Vercel milestone is reviewed. Second-account testing
-  is deferred until its sign-in is available. The user reports that local Add,
+  device. The read-only Vercel milestone is reviewed. The second account has
+  now signed in successfully on the user's phone but is not configured; its
+  sheet connection and ledger/write checks remain pending. The user reports
+  that local Add,
   Spend, and Recount work on the disposable copy and observed the working
   running-balance formula in Sheets, including a subsequent Add after a
   recount. The user also confirmed the requested hosted Safari write sequence
   and automatic refresh after direct sheet edits/deletions. The basic Add,
   Spend, and Recount milestone is reviewed locally and on Vercel, using the
-  disposable copy. Remaining write edge cases and concurrent appends are
-  unverified; originals are not approved for release. Record this milestone in
-  one PR and agree on further work before starting it. Validate changes locally
+  disposable copy; that checkpoint is merged. The user chose to proceed with
+  the tested first account's original sheet and supplied its URL, deferring
+  remaining manual edge-case and concurrency checks. Keep those checks marked
+  unverified rather than treating them as passed. The user has connected the
+  first account's original through Picker on Vercel and confirmed the displayed
+  balance/history look correct. This setup milestone is reviewed; Production
+  now targets the original, with writes enabled, while Preview is read-only.
+  Agree on further work before starting it. Keep local development on the
+  disposable copy and
+  do not add synthetic test entries to the original. Validate changes locally
   before deploying them to Vercel. The user prefers
   step-by-step guidance for dashboard setup; let them perform the dashboard
   actions unless they request browser automation. Use the README checklist;
@@ -65,7 +74,9 @@
   An uncertain write must not be automatically retried.
 - Use disposable copies for live testing. Keep real Sheet writes disabled until
   the agreed write-testing milestone; follow the README release checklist before
-  connecting originals. Never commit credentials or log tokens/financial notes.
+  connecting originals, honoring the user's recorded decision to defer remaining
+  manual edge cases for the first account. Never commit credentials or log
+  tokens/financial notes.
 - Run checks appropriate to the change. `npm run check` runs type checking, the
   unit/integration suite, and a production build; `npm run test:e2e` exercises
   phone/tablet and WebKit flows. These tests use fixtures and have no production
