@@ -51,9 +51,12 @@ made public.
    `http://localhost:3000/api/auth/callback` to authorized redirect URIs. For
    deployment, add the equivalent HTTPS URLs for the stable app domain.
 4. Create a Picker API key in the same project. Restrict it to **Google Picker
-   API** and the local/production HTTP referrers (for example
-   `http://localhost:3000/*` and `https://your-domain.example/*`). This key is
-   intentionally sent to the browser; the OAuth client secret is not.
+   API**. Under **Application restrictions → Websites**, allow
+   `http://localhost:3000/*`, `https://docs.google.com/*`, and the production
+   app's referrer when deployed (for example `https://your-domain.example/*`).
+   Picker runs inside a Google Docs iframe, so omitting its referrer can cause
+   an "API developer key is invalid" error. This key is intentionally sent to
+   the browser; the OAuth client secret is not.
 5. Copy values into `.env.local`: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`,
    `GOOGLE_PICKER_API_KEY`, and `GOOGLE_CLOUD_PROJECT_NUMBER`. The last value is
    the numeric project number, not its text project ID.
@@ -95,17 +98,25 @@ domain rather than arbitrary Vercel preview URLs for regular Google sign-in.
 
 References: [Google web-server OAuth](https://developers.google.com/identity/protocols/oauth2/web-server),
 [file-specific scopes](https://developers.google.com/workspace/drive/api/guides/api-specific-auth),
-[Picker setup](https://developers.google.com/workspace/drive/api/guides/picker),
+[Picker setup](https://developers.google.com/workspace/drive/picker/guides/web-picker?hl=en),
 [Family Link controls](https://support.google.com/families/answer/9204736).
 
 ## Prepare the ledger tab
 
-The configured tab needs **Date, Description, Amount, Balance** in A1:D1 and an
+The configured tab needs **Date, Amount, Balance, Description** in A1:D1 and an
 opening row with a numeric balance. Keep it dedicated to ledger entries, with
 summaries on another tab. Maintain Balance formulas when adding ordinary entries
 directly in Sheets; a missing/error balance in the latest row blocks app writes.
 See [the spreadsheet schema](SPEC.md#spreadsheet-schema-and-balance-semantics)
 for data types, recount semantics, and compatibility limits.
+
+The app's Description field is stored in column D. **Notes** is also accepted as
+that column's header, so existing sheets can be renamed when convenient.
+If a sheet still uses the earlier Date/Description/Amount/Balance layout, move
+its entire columns to match the required layout and label column D Description;
+changing only the header labels would put the existing values in the wrong
+columns. Confirm the balance
+formulas still work after reordering, using a disposable copy first.
 
 ## Implementation milestones and live acceptance
 
@@ -115,11 +126,21 @@ with the user and record any fixes/checklist updates in that milestone's commit
 before advancing. The current implementation/verification status is in
 [SPEC.md](SPEC.md#current-scope-and-verification-status).
 
+Verified on desktop Chrome with one configured account on 2026-10-12: Google
+sign-in, Picker selection, and read-only loading of the Notes-layout test copy
+(218 populated rows, $187.00). The user confirmed the balance and transaction
+history match. Repeat on the second account and target devices;
+the Family Link/Safari gate below remains pending.
+
+- [x] **Desktop read-only checkpoint:** one account can sign in, connect its
+  disposable copy, and view the correct balance and history; user review passed.
 - [ ] **Authorization gate:** sign in with a Family Link account on iPhone/iPad
   Safari and successfully select/read its disposable sheet. If blocked, pause
   and resolve parental permissions; do not switch to parent-managed identities.
 - [ ] **Read-only balance:** confirm the balance matches Google Sheets. On the
-  supplied reference copy, 96 entries should load and the balance should be $270.
+  supplied Notes-layout copy, 218 populated rows should load and the balance
+  should be $187. The earlier reference has 96 entries and a $270 balance once
+  its columns are reordered to the current schema.
 - [ ] **History:** check older entries, date ranges, and recount markers. Change
   an entry directly in Sheets and check Refresh and returning to the app.
 - [ ] **Add/Spend on the disposable sheet:** set `ENABLE_SHEET_WRITES=true`,
@@ -158,8 +179,9 @@ npm run test:e2e
   additions, overspending confirmation, zero recounts, failed drafts, repeated
   taps, and invalid balances. It uses fictional data and mocked API responses;
   it does **not** authenticate to Google or modify real Sheets.
-- `tests/fixtures/reference-balances.json` contains only amounts and balances
-  from the provided test copy. Names, dates, and descriptions are omitted.
+- `tests/fixtures/reference-balances.json` and
+  `tests/fixtures/notes-ledger-balances.json` contain only amounts and balances
+  from the provided test copies. Names, dates, and notes are omitted.
 - Browser-test demo access is development-only. Production builds always require
   Google authorization.
 

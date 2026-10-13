@@ -25,16 +25,22 @@ spreadsheet authorization, account isolation, Add money, Spend money, Recount
 cash, confirmations, error handling, and automated tests. A local preview uses
 clearly marked fictional data.
 
-As of 2026-10-11, type checking, the production build, 60 unit/integration tests,
-and 21 browser checks have passed. Browser checks cover phone and tablet sizes
+As of 2026-10-12, type checking, the production build, 63 unit/integration tests,
+and 24 browser checks have passed. Browser checks cover phone and tablet sizes
 in Chromium and a phone configuration in WebKit with mocked APIs. These are
 not proof of real Google authorization or execution of formulas in Google Sheets.
 
-Live Google credentials, Family Link authorization, actual Sheets reads/writes,
-real-device Safari behavior, and Vercel deployment remain unverified. Live
-writes are off by default. The next agreed milestone is **Google sign-in and
-read-only access to a disposable spreadsheet copy**, with user review before
-advancing. Keep completion of live checks in the README acceptance checklist.
+Local Google credentials are configured. Live Google sign-in has succeeded for
+one configured account in desktop Chrome, and the live Picker dialog renders
+after the referrer-policy fix. The configured Notes-layout test copy loads
+218 populated rows and a $187.00 balance in read-only mode, with the balance and
+transaction history confirmed by the user. Actual Sheets writes,
+the second account, Family Link behavior on the target devices, real-device
+Safari, and Vercel deployment remain unverified. Live writes are off by default.
+The desktop portion of **Google sign-in and read-only access to a disposable
+spreadsheet copy** is reviewed. Complete the remaining account/device checks
+before advancing to live writes. Keep completion of live checks in the README
+acceptance checklist.
 
 ### Deferred features
 
@@ -106,12 +112,19 @@ headers, compared after trimming and lowercasing:
 | Column | Header | Existing cells | New app-created cells |
 | --- | --- | --- | --- |
 | A | Date | Dates or displayed date text | Numeric Sheets date serial, formatted `m/d/yy` |
-| B | Description | Displayed text | Literal string, including text starting with `=` |
-| C | Amount | Signed numeric dollars, or blank for a balance reset | Positive/negative numeric dollars, or blank for recount |
-| D | Balance | Numeric balance or formula with a numeric result | Running formula for Add/Spend, literal numeric dollars for recount |
+| B | Amount | Signed numeric dollars, or blank for a balance reset | Positive/negative numeric dollars, or blank for recount |
+| C | Balance | Numeric balance or formula with a numeric result | Running formula for Add/Spend, literal numeric dollars for recount |
+| D | Description | Displayed text | Literal string, including text starting with `=` |
+
+The app and API use `description` for the entry's note; it maps to column D.
+Notes is also accepted as column D's header, with the same trimming and
+case-insensitive comparison, so existing copies work before their header is
+renamed. The earlier Date/Description/Amount/Balance layout is not
+accepted. Reorder entire columns on a disposable copy and verify formulas before
+connecting a sheet in the current layout; do not merely relabel its headers.
 
 An opening row must establish a numeric balance. The current balance is the
-effective numeric value in column D of the **last populated row in A–D**.
+effective numeric value in column C of the **last populated row in A–D**.
 It is not the sum of Amount: historical recounts deliberately reset the balance.
 Formatting-only rows are ignored. A missing or formula-error balance in the
 latest populated row blocks writes; do not silently fall back to an older balance.
@@ -120,12 +133,12 @@ Append a complete row in one `spreadsheets.batchUpdate` / `appendCells` request.
 Google selects the appended row on the server. Ordinary app entries use:
 
 ```text
-=INDEX(D:D,ROW()-1)+INDEX(C:C,ROW())
+=INDEX(C:C,ROW()-1)+INDEX(B:B,ROW())
 ```
 
 This refers to the immediately preceding balance and the new row's own amount
-without precomputing a row number. Recounts append a blank C cell and explicit
-D value, matching the existing ledger's reset convention. Prior rows, formulas,
+without precomputing a row number. Recounts append a blank B cell and explicit
+C value, matching the existing ledger's reset convention. Prior rows, formulas,
 and resets are preserved. Date serial calculation uses UTC for the submitted
 calendar date, so storage does not shift it across time zones.
 
@@ -147,9 +160,11 @@ calendar date, so storage does not shift it across time zones.
 - Ledger entry `row` is the current row number for display/keying, not a stable
   transaction ID. Future editing/deletion needs an explicit row-identity and
   concurrency design.
-- The sanitized reference fixture contains 96 amounts/balances and ends at
-  $270.00. It includes a historical $420 balance reset; personal descriptions,
-  names, and dates are omitted from the fixture.
+- The earlier sanitized reference fixture contains 96 amounts/balances and ends
+  at $270.00, including a historical $420 balance reset. Tests place its values
+  in the current column order, matching a sheet whose columns have been moved.
+- The Notes-layout fixture preserves a leading blank row and 218 populated rows,
+  ending at $187.00. Both fixtures omit personal notes, names, and dates.
 
 ## Architecture and account connections
 
@@ -208,6 +223,11 @@ Authenticated JSON responses are private/no-store. Mutations require an Origin
 matching `APP_URL`. Do not log tokens or financial descriptions. Required
 environment variables and setup details are maintained in `.env.example` and
 the README, not duplicated here.
+
+Use `Referrer-Policy: strict-origin-when-cross-origin` so Google's
+website-restricted Picker key receives the app's origin on cross-origin
+requests without receiving URL paths or query strings. A `same-origin` policy
+suppresses that referrer and can prevent Picker from loading.
 
 ### HTTP contracts
 

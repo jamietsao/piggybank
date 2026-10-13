@@ -43,14 +43,16 @@ describe("cash entries", () => {
     const append = request.requests[0].appendCells;
     expect(append.sheetId).toBe(17);
     const values = append.rows[0].values;
-    expect(values[1].userEnteredValue).toEqual({ stringValue: "=SUM(A1:A4)" });
-    expect(values[2].userEnteredValue).toEqual({ numberValue: -12.34 });
-    expect(values[3].userEnteredValue).toEqual({ formulaValue: "=INDEX(D:D,ROW()-1)+INDEX(C:C,ROW())" });
+    expect(values[0].userEnteredValue).toEqual({ numberValue: dateSerial("2026-10-10") });
+    expect(values[1].userEnteredValue).toEqual({ numberValue: -12.34 });
+    expect(values[2].userEnteredValue).toEqual({ formulaValue: "=INDEX(C:C,ROW()-1)+INDEX(B:B,ROW())" });
+    expect(values[3].userEnteredValue).toEqual({ stringValue: "=SUM(A1:A4)" });
     expect(request.requests).toHaveLength(1);
   });
   it("writes recounts as a balance reset with a blank amount", () => {
     const values = buildAppendRequest(0, validateTransaction({ ...entry, action: "recount", amount: "42.17" })).requests[0].appendCells.rows[0].values;
-    expect(values[2]).toEqual({});
-    expect(values[3].userEnteredValue).toEqual({ numberValue: 42.17 });
+    expect(values[1]).toEqual({});
+    expect(values[2].userEnteredValue).toEqual({ numberValue: 42.17 });
+    expect(values[3].userEnteredValue).toEqual({ stringValue: "A gift" });
   });
 });

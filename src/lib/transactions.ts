@@ -51,11 +51,11 @@ export function buildAppendRequest(sheetId: number, transaction: ValidatedTransa
       sheetId,
       rows: [{ values: [
         { userEnteredValue: { numberValue: dateSerial(transaction.date) }, userEnteredFormat: { numberFormat: { type: "DATE", pattern: "m/d/yy" } } },
-        { userEnteredValue: { stringValue: transaction.description } },
         transaction.action === "recount" ? {} : { userEnteredValue: { numberValue: (transaction.action === "spend" ? -transaction.cents : transaction.cents) / 100 }, userEnteredFormat: moneyFormat },
         { userEnteredValue: transaction.action === "recount"
           ? { numberValue: transaction.cents / 100 }
-          : { formulaValue: "=INDEX(D:D,ROW()-1)+INDEX(C:C,ROW())" }, userEnteredFormat: moneyFormat },
+          : { formulaValue: "=INDEX(C:C,ROW()-1)+INDEX(B:B,ROW())" }, userEnteredFormat: moneyFormat },
+        { userEnteredValue: { stringValue: transaction.description } },
       ] }],
       fields: "userEnteredValue,userEnteredFormat.numberFormat",
     } }],
