@@ -43,10 +43,18 @@ Google redirect/callback, PKCE, Secure/HttpOnly OAuth cookie, no-store responses
 and unauthenticated ledger rejection.
 
 The hosted read-only milestone is reviewed for the first configured account.
-Actual Sheets writes/formulas, concurrent appends, and the second account remain
-unverified. Second-account testing is deferred until its sign-in is available.
-Live writes remain disabled. Agree on the next milestone and keep completion
-of live checks in the README acceptance checklist before advancing to live writes.
+The user reports that local Add money, Spend money, and Recount cash work on
+the disposable copy, and observed the app's working running-balance formula
+in Sheets. The user also confirmed that adding after a recount starts from the
+recounted balance. After local review, the user also confirmed the requested
+hosted Safari Add, Spend, Recount, and subsequent Add sequence, and that direct
+spreadsheet edits/deletions appear after automatic refresh. The basic live-write
+milestone is reviewed locally and on Vercel for the disposable copy, with writes
+enabled for Production testing and disabled for Preview. Remaining write edge
+cases, concurrent appends, and the second account remain unverified; originals
+are not approved for release. Second-account testing is deferred until its
+sign-in is available. Record this milestone in one PR and agree on further work
+before starting it. Keep actual outcomes in the README acceptance checklist.
 
 ### Deferred features
 
@@ -69,8 +77,11 @@ of live checks in the README acceptance checklist before advancing to live write
   pagination.
 - Preserve historical date text, including date ranges and malformed dates,
   as displayed in Sheets. Do not clean up or migrate historical rows implicitly.
-- Provide Refresh and reload after successful saves and when returning to the
-  app. An unsuccessful read may show the last loaded balance, labeled accordingly,
+- Load on opening the app and reload after successful saves, clicking Refresh,
+  window focus, or a visibility change back to the visible tab. These events
+  read the current ledger; there is no periodic polling or Google push listener.
+  External edits made while the app stays focused appear on the next refresh.
+  An unsuccessful read may show the last loaded balance, labeled accordingly,
   while entry actions are disabled.
 - There is no link or button that opens the spreadsheet from the app. The
   one-time Google Picker connection selects a file and returns to the app.

@@ -132,7 +132,10 @@ sign-in, Picker selection, and read-only loading of the Notes-layout test copy
 history match. The user also confirmed hosted Google sign-in, balance/history,
 and the requested Safari screen-fit, refresh, and return-to-app checks on a
 target device. Second-account testing is deferred until its sign-in is
-available. Live money changes remain disabled.
+available. The user confirmed local and hosted Safari Add, Spend, Recount, and
+adding after a recount on the disposable copy. Direct spreadsheet edits and
+row deletions were also reflected in the app after automatic refresh. Writes
+are enabled for Production testing on the disposable copy; Preview stays read-only.
 
 - [x] **Desktop read-only checkpoint:** one account can sign in, connect its
   disposable copy, and view the correct balance and history; user review passed.
@@ -147,16 +150,22 @@ available. Live money changes remain disabled.
   its columns are reordered to the current schema.
 - [x] **Safari usability:** confirm the balance/history fit the screen and
   refresh and returning to the app work; user review passed.
-- [ ] **History details and external edits:** check older entries, date ranges,
-  and recount markers. Change an entry directly in the disposable sheet and
-  confirm Refresh and returning to the app pick up the change.
+- [ ] **History details:** check older entries, date ranges, and recount markers.
+- [x] **External edits:** the user confirmed that direct spreadsheet updates
+  and row deletions appear in the app after automatic refresh.
 - [ ] **Second account:** repeat Google sign-in and read-only checks when its
   sign-in is available; currently deferred.
-- [ ] **Add/Spend on the disposable sheet:** set `ENABLE_SHEET_WRITES=true`,
-  restart, and test deposits, cents, backdated spending, a description beginning
-  with `=`, and confirmed overspending.
-- [ ] **Recount:** test a zero balance and another corrected balance, then add
-  a transaction. Confirm formulas remain correct after earlier Sheet edits.
+- [x] **Basic local writes:** Add money, Spend money, and Recount cash work
+  against the disposable copy, as reported by the user. The user observed the
+  working running-balance formula in Sheets.
+- [x] **Formula after a recount:** the user confirmed that a subsequent Add
+  starts from the recounted balance on the disposable copy.
+- [ ] **Add/Spend edge cases:** explicitly verify cents, backdated spending,
+  a description beginning with `=`, and confirmed overspending.
+- [ ] **Recount edge cases:** test a zero balance and another corrected balance,
+  then add a transaction. Confirm formulas remain correct after earlier Sheet edits.
+- [x] **Hosted writes:** after local review, the user confirmed the requested
+  Add, Spend, Recount, and subsequent Add sequence on Vercel in target-device Safari.
 - [ ] **Concurrent sessions:** append two ordinary entries from two sessions
   and verify both rows and their cumulative balance. The row formula is chosen
   relative to the actual appended row, not a client-calculated row number.
@@ -170,6 +179,29 @@ development. Setting the flag acknowledges completion of the manual gate.
 Avoid simultaneous recounts, spending confirmations, or structural Sheet edits
 when checking exact confirmation amounts. The read/append concurrency limitation
 is documented in [SPEC.md](SPEC.md#compatibility-and-limitations).
+
+### Current live-write milestone
+
+Add money, Spend money, and Recount cash are approved for testing together on
+the configured disposable copy in one PR. Basic local and hosted Safari flows,
+adding after a recount, and refresh after external edits/deletions passed user
+review; other write edge cases and concurrent-session checks remain pending.
+Test locally first, with `DEV_DEMO_MODE=false` and `ENABLE_SHEET_WRITES=true`
+on the development-server process; the saved `.env.local` write flag can stay
+`false`. Keep Vercel read-only until local review. For the basic sequence,
+record the starting balance, add $1.25, spend $0.50,
+then recount to the starting balance and confirm the reset. Inspect the appended
+rows directly in the disposable sheet: Amount is positive for Add, negative for
+Spend, and blank for Recount; Balance is a working formula for Add/Spend and a
+literal value for Recount. Add $0.25 after the reset to verify the next formula,
+then recount to the starting balance again. Refresh on desktop and Safari to
+confirm the same balance/history. Record further checklist checks separately.
+
+After local review, enable `ENABLE_SHEET_WRITES=true` for **Production only**
+and redeploy. Keep it `false` for Preview and keep `DEV_DEMO_MODE=false` in both
+environments. If the flag currently has one shared Production/Preview entry,
+split it into separate entries before enabling Production. Keep the connection
+on the disposable copy; enabling writes does not authorize switching to originals.
 
 ## Tests
 
@@ -200,11 +232,13 @@ are separate live acceptance checks, not simulated browser-test claims.
 
 ## Vercel
 
-The read-only test deployment is at
+The test deployment is at
 [piggybank-mauve.vercel.app](https://piggybank-mauve.vercel.app/). Hosted Google
 sign-in and balance/history passed user review on desktop and target-device
 Safari, including screen-fit, refresh, and return-to-app checks. The second
-account's testing is deferred for now. Live money changes remain disabled.
+account's testing is deferred for now. After local review, the user confirmed
+hosted Safari Add, Spend, Recount, and adding after a recount. Production writes
+are enabled against the disposable copy; Preview remains read-only.
 
 Import `jamietsao/piggybank` as a Next.js project with root `./` and production
 branch `main`. Vercel selects a supported Node version using `package.json`'s
@@ -221,8 +255,10 @@ these environment variables for **Production**:
 | `FAMILY_MEMBERS` | Existing account-to-disposable-copy configuration |
 | `SESSION_SECRET` | Separate generated deployment secret of at least 32 characters |
 
-Set `ENABLE_SHEET_WRITES=false` and `DEV_DEMO_MODE=false` for **Production and
-Preview**. Keep the local `APP_URL` pointed at localhost. Store secrets directly
+For initial read-only setup, set `ENABLE_SHEET_WRITES=false` and
+`DEV_DEMO_MODE=false` for **Production and Preview**. During the approved write
+milestone, use the separate Production/Preview write settings described above.
+Keep the local `APP_URL` pointed at localhost. Store secrets directly
 in Vercel's environment-variable settings, with no `NEXT_PUBLIC_` prefix.
 Production credentials are not needed in arbitrary branch preview deployments.
 Use Vercel's Secret/Sensitive option for `GOOGLE_CLIENT_SECRET`, `SESSION_SECRET`,
@@ -238,9 +274,9 @@ and `https://docs.google.com/*`. Keep sign-in testing on the stable production
 domain. Preview/deployment URLs may require Vercel authentication in addition
 to the app's Google sign-in.
 
-The first account's hosted read-only checkpoint is reviewed. Follow the live
-acceptance checklist and agree on the next milestone before enabling write
-testing on disposable copies.
+The first account's basic read/write checkpoint is reviewed locally and on
+Vercel. Follow the remaining live acceptance checklist and agree on further
+work before connecting originals.
 
 The authentication model and future onboarding extension are documented in
 [SPEC.md](SPEC.md#architecture-and-account-connections).
