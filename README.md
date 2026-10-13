@@ -129,20 +129,29 @@ before advancing. The current implementation/verification status is in
 Verified on desktop Chrome with one configured account on 2026-10-12: Google
 sign-in, Picker selection, and read-only loading of the Notes-layout test copy
 (218 populated rows, $187.00). The user confirmed the balance and transaction
-history match. Repeat on the second account and target devices;
-the Family Link/Safari gate below remains pending.
+history match. The user also confirmed hosted Google sign-in, balance/history,
+and the requested Safari screen-fit, refresh, and return-to-app checks on a
+target device. Second-account testing is deferred until its sign-in is
+available. Live money changes remain disabled.
 
 - [x] **Desktop read-only checkpoint:** one account can sign in, connect its
   disposable copy, and view the correct balance and history; user review passed.
-- [ ] **Authorization gate:** sign in with a Family Link account on iPhone/iPad
-  Safari and successfully select/read its disposable sheet. If blocked, pause
+- [x] **Hosted read-only checkpoint:** first configured account can sign in on
+  Vercel and view its balance/history; user review passed.
+- [x] **Authorization gate (first account):** sign in on target-device Safari
+  and successfully read the disposable sheet authorized through Picker. If blocked, pause
   and resolve parental permissions; do not switch to parent-managed identities.
-- [ ] **Read-only balance:** confirm the balance matches Google Sheets. On the
+- [x] **Read-only balance (first account):** confirm the balance matches Google Sheets. On the
   supplied Notes-layout copy, 218 populated rows should load and the balance
   should be $187. The earlier reference has 96 entries and a $270 balance once
   its columns are reordered to the current schema.
-- [ ] **History:** check older entries, date ranges, and recount markers. Change
-  an entry directly in Sheets and check Refresh and returning to the app.
+- [x] **Safari usability:** confirm the balance/history fit the screen and
+  refresh and returning to the app work; user review passed.
+- [ ] **History details and external edits:** check older entries, date ranges,
+  and recount markers. Change an entry directly in the disposable sheet and
+  confirm Refresh and returning to the app pick up the change.
+- [ ] **Second account:** repeat Google sign-in and read-only checks when its
+  sign-in is available; currently deferred.
 - [ ] **Add/Spend on the disposable sheet:** set `ENABLE_SHEET_WRITES=true`,
   restart, and test deposits, cents, backdated spending, a description beginning
   with `=`, and confirmed overspending.
@@ -191,11 +200,47 @@ are separate live acceptance checks, not simulated browser-test claims.
 
 ## Vercel
 
-Import this repository as a Next.js project, select Node 22, and configure the
-server environment variables from `.env.example`. Set `APP_URL` to the exact
-HTTPS app origin and register its `/api/auth/callback` URI and origin in Google
-Cloud. No credentials should have a `NEXT_PUBLIC_` prefix. Do not enable preview
-demo mode in deployed environments. Restart/redeploy after configuration changes.
+The read-only test deployment is at
+[piggybank-mauve.vercel.app](https://piggybank-mauve.vercel.app/). Hosted Google
+sign-in and balance/history passed user review on desktop and target-device
+Safari, including screen-fit, refresh, and return-to-app checks. The second
+account's testing is deferred for now. Live money changes remain disabled.
+
+Import `jamietsao/piggybank` as a Next.js project with root `./` and production
+branch `main`. Vercel selects a supported Node version using `package.json`'s
+engine range; the current range permits Node 24 as well as Node 22. Configure
+these environment variables for **Production**:
+
+| Variable | Value/source |
+| --- | --- |
+| `APP_URL` | `https://piggybank-mauve.vercel.app` |
+| `GOOGLE_CLIENT_ID` | Existing Google OAuth client ID |
+| `GOOGLE_CLIENT_SECRET` | Existing Google OAuth client secret |
+| `GOOGLE_PICKER_API_KEY` | Existing Picker key with the hosted referrer added |
+| `GOOGLE_CLOUD_PROJECT_NUMBER` | Existing numeric Google Cloud project number |
+| `FAMILY_MEMBERS` | Existing account-to-disposable-copy configuration |
+| `SESSION_SECRET` | Separate generated deployment secret of at least 32 characters |
+
+Set `ENABLE_SHEET_WRITES=false` and `DEV_DEMO_MODE=false` for **Production and
+Preview**. Keep the local `APP_URL` pointed at localhost. Store secrets directly
+in Vercel's environment-variable settings, with no `NEXT_PUBLIC_` prefix.
+Production credentials are not needed in arbitrary branch preview deployments.
+Use Vercel's Secret/Sensitive option for `GOOGLE_CLIENT_SECRET`, `SESSION_SECRET`,
+and `GOOGLE_PICKER_API_KEY`. Picker's key is sent to the browser at runtime, so
+its website/API restrictions still apply. Redeploy after changing environment
+variables.
+
+In the same Google OAuth client, add the hosted JavaScript origin
+`https://piggybank-mauve.vercel.app` and redirect URI
+`https://piggybank-mauve.vercel.app/api/auth/callback`. On the Picker API key,
+allow `https://piggybank-mauve.vercel.app/*` alongside `http://localhost:3000/*`
+and `https://docs.google.com/*`. Keep sign-in testing on the stable production
+domain. Preview/deployment URLs may require Vercel authentication in addition
+to the app's Google sign-in.
+
+The first account's hosted read-only checkpoint is reviewed. Follow the live
+acceptance checklist and agree on the next milestone before enabling write
+testing on disposable copies.
 
 The authentication model and future onboarding extension are documented in
 [SPEC.md](SPEC.md#architecture-and-account-connections).

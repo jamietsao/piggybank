@@ -38,11 +38,15 @@
 - The current baseline includes all v1 code. One configured account has passed
   live Google sign-in, Picker selection, and read-only access to a disposable
   Notes-layout copy in desktop Chrome; the user confirmed balance and history.
-  The second account, Family Link/Safari
-  on the target devices, and live Sheets writes/formulas remain unverified.
-  The current milestone is Google sign-in and read-only access on disposable
-  copies. Use the README checklist; mocked tests or preview access cannot
-  establish completion of the remaining live checks.
+  The user also confirmed hosted Google sign-in, balance/history, and the
+  requested Safari screen-fit, refresh, and return-to-app checks on a target
+  device. The read-only Vercel milestone is reviewed. Second-account testing
+  is deferred until its sign-in is available; live Sheets writes/formulas and
+  concurrent appends remain unverified. Agree on the next milestone before
+  enabling writes against a disposable copy. The user prefers
+  step-by-step guidance for dashboard setup; let them perform the dashboard
+  actions unless they request browser automation. Use the README checklist;
+  mocked tests or preview access cannot establish completion of live checks.
 
 ## Implementation and verification
 

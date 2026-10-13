@@ -34,13 +34,19 @@ Local Google credentials are configured. Live Google sign-in has succeeded for
 one configured account in desktop Chrome, and the live Picker dialog renders
 after the referrer-policy fix. The configured Notes-layout test copy loads
 218 populated rows and a $187.00 balance in read-only mode, with the balance and
-transaction history confirmed by the user. Actual Sheets writes,
-the second account, Family Link behavior on the target devices, real-device
-Safari, and Vercel deployment remain unverified. Live writes are off by default.
-The desktop portion of **Google sign-in and read-only access to a disposable
-spreadsheet copy** is reviewed. Complete the remaining account/device checks
-before advancing to live writes. Keep completion of live checks in the README
-acceptance checklist.
+transaction history confirmed by the user. The read-only Vercel deployment at
+`https://piggybank-mauve.vercel.app` has also passed user review of hosted Google
+sign-in and balance/history. The user confirmed the requested Safari sign-in,
+read-only display, screen-fit, refresh, and return-to-app checks on a target
+device; the specific device model was not recorded. HTTP checks verified the
+Google redirect/callback, PKCE, Secure/HttpOnly OAuth cookie, no-store responses,
+and unauthenticated ledger rejection.
+
+The hosted read-only milestone is reviewed for the first configured account.
+Actual Sheets writes/formulas, concurrent appends, and the second account remain
+unverified. Second-account testing is deferred until its sign-in is available.
+Live writes remain disabled. Agree on the next milestone and keep completion
+of live checks in the README acceptance checklist before advancing to live writes.
 
 ### Deferred features
 
@@ -172,7 +178,7 @@ calendar date, so storage does not shift it across time zones.
 
 - Next.js App Router and React provide the web interface and server routes in
   one project. TypeScript describes ledger and request contracts. Deployment
-  targets Vercel with Node 22; supported versions are in `package.json`.
+  targets Vercel; supported Node versions are in `package.json`.
 - `src/components/` contains the dashboard, entry dialog, and Picker boundary.
 - `src/app/api/` handles authentication, ledger reads, connection checks, and
   appends. Google file targets are resolved server-side.
