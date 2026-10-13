@@ -41,9 +41,16 @@
   The user also confirmed hosted Google sign-in, balance/history, and the
   requested Safari screen-fit, refresh, and return-to-app checks on a target
   device. The read-only Vercel milestone is reviewed. Second-account testing
-  is deferred until its sign-in is available; live Sheets writes/formulas and
-  concurrent appends remain unverified. Agree on the next milestone before
-  enabling writes against a disposable copy. The user prefers
+  is deferred until its sign-in is available. The user reports that local Add,
+  Spend, and Recount work on the disposable copy and observed the working
+  running-balance formula in Sheets, including a subsequent Add after a
+  recount. The user also confirmed the requested hosted Safari write sequence
+  and automatic refresh after direct sheet edits/deletions. The basic Add,
+  Spend, and Recount milestone is reviewed locally and on Vercel, using the
+  disposable copy. Remaining write edge cases and concurrent appends are
+  unverified; originals are not approved for release. Record this milestone in
+  one PR and agree on further work before starting it. Validate changes locally
+  before deploying them to Vercel. The user prefers
   step-by-step guidance for dashboard setup; let them perform the dashboard
   actions unless they request browser automation. Use the README checklist;
   mocked tests or preview access cannot establish completion of live checks.
