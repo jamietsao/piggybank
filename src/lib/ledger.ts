@@ -19,16 +19,17 @@ function populated(cell: Cell): boolean { return cell.effectiveValue !== undefin
 
 export function parseLedger(rows: { values?: Cell[] }[], writesAllowed = true): Ledger {
   const headers = rows[0]?.values || [];
-  if (["date", "description", "amount", "balance"].some((header, index) => text(headers[index]).trim().toLowerCase() !== header)) {
-    throw new AppError("SHEET_LAYOUT", "The connected sheet needs Date, Description, Amount, and Balance in columns A–D.", 422);
+  const names = headers.slice(0, 4).map(header => text(header).trim().toLowerCase());
+  if (["date", "amount", "balance"].some((header, index) => names[index] !== header) || !["description", "notes"].includes(names[3] || "")) {
+    throw new AppError("SHEET_LAYOUT", "The connected sheet needs Date, Amount, Balance, and Description in columns A–D (Notes is also accepted for column D).", 422);
   }
   const entries: LedgerEntry[] = [];
   rows.slice(1).forEach((row, index) => {
     const cells = (row.values || []).slice(0, 4);
     if (!cells.some(populated)) return;
-    const amountCents = cellCents(cells[2]);
-    const balanceCents = cellCents(cells[3]);
-    entries.push({ row: index + 2, date: text(cells[0]), description: text(cells[1]), amountCents, balanceCents, kind: amountCents === null ? "recount" : amountCents < 0 ? "spend" : "add" });
+    const amountCents = cellCents(cells[1]);
+    const balanceCents = cellCents(cells[2]);
+    entries.push({ row: index + 2, date: text(cells[0]), description: text(cells[3]), amountCents, balanceCents, kind: amountCents === null ? "recount" : amountCents < 0 ? "spend" : "add" });
   });
   const balanceCents = entries.length ? entries[entries.length - 1].balanceCents : null;
   const problem = balanceCents === null ? "The latest row has no valid balance. Ask a parent to repair it in Google Sheets, then refresh." : null;

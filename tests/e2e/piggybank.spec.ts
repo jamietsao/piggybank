@@ -30,6 +30,22 @@ test("shows history progressively without a spreadsheet-opening link or horizont
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
 
+test("sends only the app origin to Google Picker for its website-restricted key", async ({ page }) => {
+  const pickerUrl = "https://docs.google.com/picker?referrer-probe=1";
+  // Intercept Google's URL so this checks browser behavior without contacting
+  // Google or requesting any real credentials.
+  await page.route(pickerUrl, route => route.fulfill({ contentType: "text/html", body: "<p>Picker referrer check</p>" }));
+  await page.goto("/?private-query=must-not-be-shared");
+  const request = page.waitForRequest(pickerUrl);
+  await page.evaluate(url => {
+    const frame = document.createElement("iframe");
+    frame.title = "Picker referrer check";
+    frame.src = url;
+    document.body.appendChild(frame);
+  }, pickerUrl);
+  expect(await (await request).headerValue("referer")).toBe("http://localhost:3000/");
+});
+
 test("adds money with a backdated entry and literal formula-like description", async ({ page }) => {
   await page.getByRole("button", { name: "Add money" }).click();
   await page.getByLabel("Amount", { exact: true }).fill("12.34");

@@ -5,8 +5,8 @@ import { validateTransaction } from "@/lib/transactions";
 
 const connection = { googleSub: "child-one", displayName: "One", spreadsheetId: "sheet-one", sheetId: 0 };
 const rows = [
-  { values: ["Date", "Description", "Amount", "Balance"].map(formattedValue => ({ formattedValue })) },
-  { values: [{ formattedValue: "10/1/26" }, { formattedValue: "Starting cash" }, { effectiveValue: { numberValue: 270 } }, { effectiveValue: { numberValue: 270 } }] },
+  { values: ["Date", "Amount", "Balance", "Description"].map(formattedValue => ({ formattedValue })) },
+  { values: [{ formattedValue: "10/1/26" }, { effectiveValue: { numberValue: 270 } }, { effectiveValue: { numberValue: 270 } }, { formattedValue: "Starting cash" }] },
 ];
 const fetchMock = vi.fn<typeof fetch>();
 beforeEach(() => { vi.stubGlobal("fetch", fetchMock); vi.stubEnv("ENABLE_SHEET_WRITES", "true"); fetchMock.mockReset(); });

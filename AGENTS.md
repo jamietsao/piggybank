@@ -35,10 +35,14 @@
   commit. Existing authorization remains valid; do not request it again merely
   because these instructions mention review. Pushes and deployments are separate
   steps from a local checkpoint commit.
-- The current baseline includes all v1 code, but live Google/Family Link access
-  and Sheets formula behavior remain unverified. The next milestone is Google
-  sign-in and read-only access on a disposable copy. Do not mark it complete
-  based on mocked tests or the local preview.
+- The current baseline includes all v1 code. One configured account has passed
+  live Google sign-in, Picker selection, and read-only access to a disposable
+  Notes-layout copy in desktop Chrome; the user confirmed balance and history.
+  The second account, Family Link/Safari
+  on the target devices, and live Sheets writes/formulas remain unverified.
+  The current milestone is Google sign-in and read-only access on disposable
+  copies. Use the README checklist; mocked tests or preview access cannot
+  establish completion of the remaining live checks.
 
 ## Implementation and verification
 
