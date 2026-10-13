@@ -35,25 +35,21 @@
   commit. Existing authorization remains valid; do not request it again merely
   because these instructions mention review. Pushes and deployments are separate
   steps from a local checkpoint commit.
-- The current baseline includes all v1 code. One configured account has passed
-  live Google sign-in, Picker selection, and read-only access to a disposable
-  Notes-layout copy in desktop Chrome; the user confirmed balance and history.
-  The user also confirmed hosted Google sign-in, balance/history, and the
-  requested Safari screen-fit, refresh, and return-to-app checks on a target
-  device. The read-only Vercel milestone is reviewed. Second-account testing
-  is deferred until its sign-in is available. The user reports that local Add,
-  Spend, and Recount work on the disposable copy and observed the working
-  running-balance formula in Sheets, including a subsequent Add after a
-  recount. The user also confirmed the requested hosted Safari write sequence
-  and automatic refresh after direct sheet edits/deletions. The basic Add,
-  Spend, and Recount milestone is reviewed locally and on Vercel, using the
-  disposable copy. Remaining write edge cases and concurrent appends are
-  unverified; originals are not approved for release. Record this milestone in
-  one PR and agree on further work before starting it. Validate changes locally
-  before deploying them to Vercel. The user prefers
-  step-by-step guidance for dashboard setup; let them perform the dashboard
-  actions unless they request browser automation. Use the README checklist;
-  mocked tests or preview access cannot establish completion of live checks.
+- The current baseline includes all v1 code. Both accounts are connected to
+  their respective originals on Vercel; the user confirmed Picker access and
+  balance/history, including second-account sign-in on their phone. Basic Add,
+  Spend, Recount, adding after a recount, and external-edit refresh passed user
+  review on a disposable copy locally and on hosted Safari. Production writes
+  are enabled; Preview remains read-only. Second-account writes and remaining
+  manual edge cases/concurrency checks are unverified. The user chose to defer
+  extra manual checks and proceed with the originals; do not mark them passed.
+  This original-sheet setup milestone is reviewed. Agree on further work before
+  starting it. Use the README checklist; mocked tests or preview access cannot
+  establish completion of live checks.
+- Keep local development and synthetic test entries on disposable copies.
+  Validate changes locally before deploying them to Vercel. The user prefers
+  step-by-step guidance for dashboard setup; let them perform dashboard actions
+  unless they request browser automation.
 
 ## Implementation and verification
 
@@ -65,7 +61,9 @@
   An uncertain write must not be automatically retried.
 - Use disposable copies for live testing. Keep real Sheet writes disabled until
   the agreed write-testing milestone; follow the README release checklist before
-  connecting originals. Never commit credentials or log tokens/financial notes.
+  connecting originals, honoring the user's recorded decision to defer remaining
+  manual edge cases for original-sheet setup. Never commit credentials or log
+  tokens/financial notes.
 - Run checks appropriate to the change. `npm run check` runs type checking, the
   unit/integration suite, and a production build; `npm run test:e2e` exercises
   phone/tablet and WebKit flows. These tests use fixtures and have no production

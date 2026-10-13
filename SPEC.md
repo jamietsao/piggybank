@@ -51,10 +51,26 @@ hosted Safari Add, Spend, Recount, and subsequent Add sequence, and that direct
 spreadsheet edits/deletions appear after automatic refresh. The basic live-write
 milestone is reviewed locally and on Vercel for the disposable copy, with writes
 enabled for Production testing and disabled for Preview. Remaining write edge
-cases, concurrent appends, and the second account remain unverified; originals
-are not approved for release. Second-account testing is deferred until its
-sign-in is available. Record this milestone in one PR and agree on further work
-before starting it. Keep actual outcomes in the README acceptance checklist.
+cases, concurrent appends, and writes under the second account remain unverified.
+The user
+chose to proceed with the tested first account's original sheet without the
+remaining manual edge-case checks and supplied its URL. This authorizes that
+account's original-sheet connection; it does not establish that deferred tests
+passed. The user connected the original through Google Picker on Vercel and
+confirmed its balance/history look correct. The original-sheet setup milestone
+is reviewed; Production now resolves the first account to the original with
+writes enabled, while Preview remains read-only. Compatibility/access was
+verified under the daughter's app session; the agent's connected Drive account
+could not inspect the original. Synthetic writes were tested on the disposable
+copy, not on the original.
+Keep local development on the disposable copy and do not add synthetic test
+entries to the originals. The user also signed in with the second account on
+their phone, configured its mapping alongside the first, connected its original
+through Picker, and confirmed the displayed balance/history. Both original-sheet
+connections are now reviewed and configured in Production; Preview remains
+read-only. The connected Drive account cannot inspect either original, so these
+access/layout checks were performed through the daughters' app sessions.
+Keep actual outcomes in the README acceptance checklist.
 
 ### Deferred features
 
