@@ -43,9 +43,15 @@
   are enabled; Preview remains read-only. Second-account writes and remaining
   manual edge cases/concurrency checks are unverified. The user chose to defer
   extra manual checks and proceed with the originals; do not mark them passed.
-  This original-sheet setup milestone is reviewed. Agree on further work before
-  starting it. Use the README checklist; mocked tests or preview access cannot
-  establish completion of live checks.
+  Original-sheet and custom-domain setup milestones are reviewed. The canonical
+  app address is `https://piggybank.jamietsao.com`. Network Solutions
+  DNS and HTTPS are verified; the user saved the new Google OAuth origin and
+  callback and Picker website restriction. Production APP_URL now uses the new
+  domain; HTTPS, callback, and old-address 308 Permanent redirect checks passed,
+  including preservation of path/query. The user confirmed both accounts'
+  new-domain sign-in and balance/history. Google OAuth publishing status still
+  needs review for regular use. Agree on further work before starting it. Use
+  the README checklist; mocked tests or preview access cannot establish live checks.
 - Keep local development and synthetic test entries on disposable copies.
   Validate changes locally before deploying them to Vercel. The user prefers
   step-by-step guidance for dashboard setup; let them perform dashboard actions

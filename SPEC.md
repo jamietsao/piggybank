@@ -72,6 +72,18 @@ read-only. The connected Drive account cannot inspect either original, so these
 access/layout checks were performed through the daughters' app sessions.
 Keep actual outcomes in the README acceptance checklist.
 
+Custom-domain setup is reviewed at `https://piggybank.jamietsao.com` using
+the existing domain's Network Solutions DNS and Vercel hosting. A verified HTTPS
+request returned HTTP 200 with a valid certificate. The user saved its Google
+OAuth origin/callback and Picker website restriction. Production now uses the
+new origin; HTTP checks confirmed the matching Google callback, PKCE,
+Secure/HttpOnly OAuth cookie, unauthenticated ledger rejection, and a 308 from
+the old address preserving path/query. The user confirmed both accounts' sign-in
+and balance/history at the new domain. The permanent redirect is verified.
+Google OAuth publishing status
+also needs review for regular use; moving the domain does not resolve Testing
+mode's seven-day authorization expiry.
+
 ### Deferred features
 
 - Editing and deleting transactions in the app; corrections currently happen

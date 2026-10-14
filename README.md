@@ -270,8 +270,8 @@ are separate live acceptance checks, not simulated browser-test claims.
 
 ## Vercel
 
-The test deployment is at
-[piggybank-mauve.vercel.app](https://piggybank-mauve.vercel.app/). Hosted Google
+The family app is at
+[piggybank.jamietsao.com](https://piggybank.jamietsao.com/). Hosted Google
 sign-in and balance/history passed user review on desktop and target-device
 Safari, including screen-fit, refresh, and return-to-app checks. The second
 account's phone sign-in, Picker connection, and balance/history passed user review;
@@ -289,7 +289,7 @@ these environment variables for **Production**:
 
 | Variable | Value/source |
 | --- | --- |
-| `APP_URL` | `https://piggybank-mauve.vercel.app` |
+| `APP_URL` | `https://piggybank.jamietsao.com` |
 | `GOOGLE_CLIENT_ID` | Existing Google OAuth client ID |
 | `GOOGLE_CLIENT_SECRET` | Existing Google OAuth client secret |
 | `GOOGLE_PICKER_API_KEY` | Existing Picker key with the hosted referrer added |
@@ -309,9 +309,9 @@ its website/API restrictions still apply. Redeploy after changing environment
 variables.
 
 In the same Google OAuth client, add the hosted JavaScript origin
-`https://piggybank-mauve.vercel.app` and redirect URI
-`https://piggybank-mauve.vercel.app/api/auth/callback`. On the Picker API key,
-allow `https://piggybank-mauve.vercel.app/*` alongside `http://localhost:3000/*`
+`https://piggybank.jamietsao.com` and redirect URI
+`https://piggybank.jamietsao.com/api/auth/callback`. On the Picker API key,
+allow `https://piggybank.jamietsao.com/*` alongside `http://localhost:3000/*`
 and `https://docs.google.com/*`. Keep sign-in testing on the stable production
 domain. Preview/deployment URLs may require Vercel authentication in addition
 to the app's Google sign-in.
@@ -319,6 +319,30 @@ to the app's Google sign-in.
 The basic read/write checkpoint is reviewed locally and on Vercel using the
 first account's disposable copy. Both original connections passed user review,
 with remaining manual edge cases deferred.
+
+### Custom-domain setup
+
+The app address is `https://piggybank.jamietsao.com`. The subdomain was
+added to the Production project, and Network Solutions has the CNAME record
+`piggybank` → `933c068932c50340.vercel-dns-017.com.` supplied by Vercel. HTTPS
+has been verified with HTTP 200 and a valid certificate. The user added the new
+Google OAuth origin and `/api/auth/callback` URI to the existing client, and
+saved the new Picker website restriction.
+
+Production APP_URL uses this origin. HTTP checks confirmed the matching Google
+callback, PKCE, Secure/HttpOnly OAuth cookie, and unauthenticated ledger rejection.
+The old `piggybank-mauve.vercel.app` address redirects with 308 Permanent, preserving path
+and query, using Vercel's domain settings. The app uses one configured origin
+for OAuth and write requests.
+
+The user confirmed new-domain sign-in and balance/history for both accounts.
+Sessions belong to their hostname, so previous-address logins do not carry over.
+The permanent redirect was verified for both the homepage and a path with query
+parameters. Custom-domain setup passed user review.
+
+Keep local APP_URL on localhost, both account connections intact, and Preview
+read-only. Review Google OAuth publishing status
+separately to avoid Testing mode's seven-day authorization expiry during regular use.
 
 The authentication model and future onboarding extension are documented in
 [SPEC.md](SPEC.md#architecture-and-account-connections).
