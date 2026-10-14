@@ -179,6 +179,9 @@ originals. Local development still targets the disposable copy; Preview stays re
   deferring remaining manual edge cases and concurrency checks.
 - [x] **Second-account connection:** the user confirmed its original-sheet
   setup after updating the complete two-account mapping; first record preserved.
+- [x] **OAuth Production:** the user completed required Branding fields,
+  published OAuth, and confirmed fresh sign-out/sign-in and balance/history
+  for both accounts at the custom domain.
 
 `ENABLE_SHEET_WRITES=false` is the default. Read-only mode is displayed in the
 app and enforced on the server. Original Sheets were not modified during
@@ -341,22 +344,32 @@ The permanent redirect was verified for both the homepage and a path with query
 parameters. Custom-domain setup passed user review.
 
 Keep local APP_URL on localhost, both account connections intact, and Preview
-read-only. Review Google OAuth publishing status
-separately to avoid Testing mode's seven-day authorization expiry during regular use.
+read-only. Google OAuth is now published to Production, as confirmed by the user;
+fresh authorizations for both accounts passed user review.
 
-### Google Branding and publishing (in progress)
+### Google Branding and publishing
 
-Google requires app name, support email, homepage, and privacy-policy URL before
-this project's move to external Production. The public `/privacy` page and
+The user completed the required Branding fields, published OAuth to external
+Production, and confirmed fresh sign-out/sign-in and correct balance/history
+for both accounts. Google's Testing-mode seven-day limit does not apply to
+new authorizations issued in Production; sessions and permissions can still
+expire or be revoked. The app's two-account allowlist still controls access.
+Public registration remains unimplemented. Google brand/scope verification is
+separate from OAuth audience publishing.
+
+Google requires app name, support email, homepage, and privacy-policy URL for
+this project's external Production setup. The public `/privacy` page and
 homepage/footer links passed user review. Type checking, the build,
 63 unit/integration tests, 24 existing browser tests, and public-page/link/layout
-checks on phone, desktop, and WebKit passed locally. Merge and deploy the page
-before adding its URL in Google Branding.
+checks on phone, desktop, and WebKit passed locally. The page is merged and
+deployed; public HTTPS checks confirmed HTTP 200, the correct contact, no login
+cookies, and the homepage link/description.
 
-Once deployed, configure Google Auth Platform → Branding:
+Configure Google Auth Platform → Branding:
 
 - App name: `Piggybank`.
-- User support email: select the personal Google account email you monitor.
+- User support email: select an available Google account/group email you monitor;
+  use `piggybank@jamietsao.com` if it is offered in the dropdown.
 - Homepage: `https://piggybank.jamietsao.com/`.
 - Privacy policy: `https://piggybank.jamietsao.com/privacy`.
 - Authorized domain: `jamietsao.com`; Google may ask for domain ownership verification.
