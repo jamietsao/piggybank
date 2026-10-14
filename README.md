@@ -344,5 +344,32 @@ Keep local APP_URL on localhost, both account connections intact, and Preview
 read-only. Review Google OAuth publishing status
 separately to avoid Testing mode's seven-day authorization expiry during regular use.
 
+### Google Branding and publishing (in progress)
+
+Google requires app name, support email, homepage, and privacy-policy URL before
+this project's move to external Production. The public `/privacy` page and
+homepage/footer links passed user review. Type checking, the build,
+63 unit/integration tests, 24 existing browser tests, and public-page/link/layout
+checks on phone, desktop, and WebKit passed locally. Merge and deploy the page
+before adding its URL in Google Branding.
+
+Once deployed, configure Google Auth Platform → Branding:
+
+- App name: `Piggybank`.
+- User support email: select the personal Google account email you monitor.
+- Homepage: `https://piggybank.jamietsao.com/`.
+- Privacy policy: `https://piggybank.jamietsao.com/privacy`.
+- Authorized domain: `jamietsao.com`; Google may ask for domain ownership verification.
+
+Save, then return to Audience and review Google's prompts for publishing.
+Only record Production status after Google confirms it. Sign out/in with each
+account afterward to obtain fresh authorizations, and verify balance/history.
+The app's family allowlist still controls ledger access. The user reviewed the
+policy wording and selected `piggybank@jamietsao.com` as its contact. Public
+registration remains unimplemented.
+
+References: [Google Branding requirements](https://support.google.com/cloud/answer/15549049?hl=en),
+[Google API Services User Data Policy](https://developers.google.com/terms/api-services-user-data-policy).
+
 The authentication model and future onboarding extension are documented in
 [SPEC.md](SPEC.md#architecture-and-account-connections).
