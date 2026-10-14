@@ -85,7 +85,7 @@ export function Dashboard({ viewer }: { viewer: Viewer }) {
       </section>
       <div className="bottom-note"><PiggyBank size={19} /><span>Big dreams start with small savings.</span></div>
     </main>
-    <footer className="app-footer"><span>A happy little home for your savings.</span><span>One little bit at a time.</span></footer>
+    <footer className="app-footer"><span>A happy little home for your savings.</span><a className="footer-link" href="/privacy">Privacy policy</a></footer>
     <TransactionDialog action={active} balanceCents={ledger?.balanceCents ?? null} onClose={() => setActive(null)} onRefresh={refresh} onSaved={async () => { setStatus("Your entry is saved."); await refresh(); }} />
   </div>;
 }

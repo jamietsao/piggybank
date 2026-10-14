@@ -78,6 +78,15 @@ button, a { touch-action: manipulation; }
 .show-more { display: flex; align-items: center; justify-content: center; gap: 7px; border: 0; color: #748367; font-size: 12px; background: transparent; min-height: 48px; width: 100%; padding: 18px; }
 .bottom-note { display: flex; justify-content: center; align-items: center; gap: 9px; padding: 28px 0 5px; font-size: 11px; color: #939b8b; }
 .app-footer { max-width: 1120px; width: calc(100% - 80px); margin: 0 auto; border-top: 1px solid var(--line); min-height: 70px; display: flex; align-items: center; justify-content: space-between; gap: 16px; color: #929a8c; font-size: 10px; }
+.footer-link { display: inline-flex; align-items: center; min-height: 44px; padding: 8px 0; flex-shrink: 0; color: var(--green); font-size: 12px; text-underline-offset: 3px; }
+.privacy-page { width: calc(100% - 48px); max-width: 760px; margin: 0 auto; padding: 44px 0 56px; flex: 1; line-height: 1.8; }
+.privacy-heading, .privacy-section { display: grid; gap: 12px; }
+.privacy-heading { margin-bottom: 32px; }
+.privacy-heading h1 { font-family: 'Manrope', sans-serif; font-size: clamp(30px, 5vw, 42px); line-height: 1.3; letter-spacing: -1.5px; }
+.privacy-updated { color: var(--muted); font-size: 12px; }
+.privacy-section { margin-top: 28px; }
+.privacy-section h2 { font-family: 'Manrope', sans-serif; font-size: 19px; line-height: 1.4; letter-spacing: -.4px; }
+.privacy-page a { color: var(--green); overflow-wrap: anywhere; text-underline-offset: 3px; }
 .notice { background: #eeefe7; color: #5e6c55; font-size: 13px; padding: 15px 18px; border-radius: 12px; margin-bottom: 18px; line-height: 1.6; }
 .notice.error { background: #f9e9e1; color: #8d4d39; }
 .notice.warning { background: #f8f0d6; color: #80662d; }
@@ -115,6 +124,7 @@ input::placeholder { color: #a3aa9b; }
 .landing h1 { margin-top: 22px; font-size: clamp(34px,5vw,52px); line-height: 1.25; letter-spacing: -2px; font-family: 'Manrope', sans-serif; font-weight: 750; }
 .landing h1 span { color: #7b9366; }
 .landing-description { max-width: 400px; margin: 20px auto 0; font-size: 14px; line-height: 1.8; color: var(--muted); }
+.landing-details { max-width: 430px; margin: 12px auto 0; font-size: 13px; line-height: 1.8; color: var(--ink); }
 .landing-illustration { position: relative; width: 200px; height: 210px; margin: 16px auto 15px; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 15px; color: #7c9565; }
 .landing-illustration svg { fill: var(--sage); transform: rotate(-4deg); }
 .coin { position: absolute; display: grid; place-items: center; border-radius: 50%; border: 1.5px solid #bfa773; background: #f0e0ae; color: #a68d59; font-weight: 600; }
@@ -181,6 +191,7 @@ input::placeholder { color: #a3aa9b; }
   .transaction-money span { font-size: 9px; }
   .bottom-note { font-size: 10px; }
   .app-footer { width: calc(100% - 36px); font-size: 9px; min-height: 63px; }
+  .privacy-page { width: calc(100% - 36px); padding-top: 30px; font-size: 14px; }
   .app-footer span:last-child { display: none; }
   .transaction-dialog { padding: 23px; border-radius: 20px; }
   .landing { padding-top: 48px; }

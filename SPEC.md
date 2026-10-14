@@ -84,6 +84,21 @@ Google OAuth publishing status
 also needs review for regular use; moving the domain does not resolve Testing
 mode's seven-day authorization expiry.
 
+Google currently blocks the move to external Production until its Branding
+configuration has an app name, support email, homepage, and privacy-policy URL.
+The current milestone adds a public `/privacy` page, links from the welcome
+screen and dashboard, and a plain description of the app on the homepage.
+The policy describes Google identity, selected-sheet access, account-connection
+configuration, encrypted login cookies, service providers, and user controls.
+Its contact address is `piggybank@jamietsao.com`. Type checking, 63 unit/integration
+tests, the production build, and 24 existing browser tests passed. Additional
+local checks confirmed the privacy page is public without auth/ledger requests,
+and its homepage link and phone/desktop/WebKit layouts work. User review passed
+after selecting the contact email and confirming that onboarding changes must
+update this policy. Deployment, Branding configuration, publishing, and fresh
+authorizations remain separate checks; the
+policy page alone does not establish Google approval or Production status.
+
 ### Deferred features
 
 - Editing and deleting transactions in the app; corrections currently happen
@@ -230,6 +245,10 @@ calendar date, so storage does not shift it across time zones.
 
 ### Authentication and authorization
 
+The public `/privacy` page is available without signing in or reading the
+ledger. Keep it and its homepage link current with actual data practices when
+authentication, storage, service providers, or public onboarding changes.
+
 Use Google OAuth authorization-code flow with state, nonce, and PKCE. Verify
 Google ID-token identity before checking the allowlist. Identity keys are verified
 Google subject IDs (`sub`), not email addresses or display names.
@@ -351,3 +370,10 @@ during migration without rewriting their ledger rows.
 This is the intended extension point, not a committed full onboarding schema.
 Design creation recovery, account/file lifecycle, and stable transaction identity
 when those features become an agreed milestone.
+
+Update the public privacy page in the same PR before deploying public onboarding.
+Replace the family-only and parent-managed setup descriptions with the actual
+onboarding flow, connection-metadata storage/discovery, and disconnect/removal
+controls. Describe implemented behavior; do not publish planned data practices
+as though they already exist. Existing family ledgers should remain usable as
+their connections migrate away from manual environment configuration.
