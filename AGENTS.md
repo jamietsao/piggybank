@@ -49,13 +49,17 @@
   callback and Picker website restriction. Production APP_URL now uses the new
   domain; HTTPS, callback, and old-address 308 Permanent redirect checks passed,
   including preservation of path/query. The user confirmed both accounts'
-  new-domain sign-in and balance/history. Google blocked switching OAuth to
-  Production until Branding has an app name, support email, homepage, and
-  privacy URL. The public `/privacy` page and homepage links/description passed
-  local checks and user review, with `piggybank@jamietsao.com` as the policy
-  contact. Deployment, Branding configuration, publishing, and fresh account
-  authorizations remain pending. Agree on further work before starting it. Use
-  the README checklist; mocked tests or preview access cannot establish live checks.
+  new-domain sign-in and balance/history. The public `/privacy` page and homepage
+  links/description are
+  merged and deployed, with `piggybank@jamietsao.com` as the policy contact.
+  Public HTTPS access, the contact, and homepage link/description were verified.
+  The user completed required Google Branding fields and published OAuth to
+  Production, then confirmed fresh sign-out/sign-in and balance/history for
+  both accounts. Family setup is reviewed and ready for regular use; public
+  registration remains unimplemented. The two-account allowlist remains in
+  effect; Google brand/scope verification is separate from audience publishing.
+  Agree on further work before starting it. Use the README checklist; mocked
+  tests or preview access cannot establish live checks.
 - Keep local development and synthetic test entries on disposable copies.
   Validate changes locally before deploying them to Vercel. The user prefers
   step-by-step guidance for dashboard setup; let them perform dashboard actions

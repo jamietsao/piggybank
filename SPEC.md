@@ -80,13 +80,13 @@ new origin; HTTP checks confirmed the matching Google callback, PKCE,
 Secure/HttpOnly OAuth cookie, unauthenticated ledger rejection, and a 308 from
 the old address preserving path/query. The user confirmed both accounts' sign-in
 and balance/history at the new domain. The permanent redirect is verified.
-Google OAuth publishing status
-also needs review for regular use; moving the domain does not resolve Testing
-mode's seven-day authorization expiry.
+The user completed Google Branding configuration and published OAuth to external
+Production, then confirmed fresh sign-out/sign-in and balance/history for both
+accounts. The family setup is reviewed for regular use. Public registration
+remains unimplemented; the two-account allowlist still controls access.
 
-Google currently blocks the move to external Production until its Branding
-configuration has an app name, support email, homepage, and privacy-policy URL.
-The current milestone adds a public `/privacy` page, links from the welcome
+Google required an app name, support email, homepage, and privacy-policy URL
+before allowing publication. The public `/privacy` page has links from the welcome
 screen and dashboard, and a plain description of the app on the homepage.
 The policy describes Google identity, selected-sheet access, account-connection
 configuration, encrypted login cookies, service providers, and user controls.
@@ -95,9 +95,11 @@ tests, the production build, and 24 existing browser tests passed. Additional
 local checks confirmed the privacy page is public without auth/ledger requests,
 and its homepage link and phone/desktop/WebKit layouts work. User review passed
 after selecting the contact email and confirming that onboarding changes must
-update this policy. Deployment, Branding configuration, publishing, and fresh
-authorizations remain separate checks; the
-policy page alone does not establish Google approval or Production status.
+update this policy. The privacy-page PR is merged and
+deployed; public HTTPS checks confirmed HTTP 200, the requested contact email,
+no login cookies, and the homepage policy link/description. The user completed
+Branding/publishing and fresh account checks separately from deploying the page.
+Google brand/scope verification is a separate status from OAuth audience publishing.
 
 ### Deferred features
 
